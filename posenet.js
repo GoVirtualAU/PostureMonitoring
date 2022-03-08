@@ -19,7 +19,7 @@ let state = 'collection'
 let state2 = 'sitting'
 
 function preload() {
-  beep = loadSound("beep-10.mp3"); 
+  beep = loadSound("warning.mp3"); 
   font = loadFont('assets/SourceSansPro-Regular.otf');
 }
 
@@ -107,7 +107,7 @@ function draw() {
 }
 
 function modelReady() {
-  select('#status').html('PoseNet model is now Loaded') // sets the status variable in index.html
+  select('#status').html('PoseNet model is now loaded and ready for monitoring of sitting posture') // sets the status variable in index.html
 }
 
 // A function to draw ellipses over the detected keypoints
@@ -123,7 +123,7 @@ function drawKeypoints()  {
     r_eye_pos = pose.keypoints[2];
     if (nose_pos.score > 0.8 &&  l_eye_pos.score > 0.8 && r_eye_pos.score > 0.8) {
       state2 = 'sitting'
-      fill(255, 0, 0);
+      fill(0, 255, 0);
       noStroke();
       ellipse(nose_pos.position.x, nose_pos.position.y, 10, 10);
       ellipse(l_eye_pos.position.x, l_eye_pos.position.y, 10, 10);
@@ -141,7 +141,7 @@ function drawKeypoints()  {
       let mid_pt_y = (nose_pos.position.y + l_eye_pos.position.y + r_eye_pos.position.y) / 3
       text('('+str(int(tri_area))+')',mid_pt_x, mid_pt_y)
     } else {
-      state2 = 'invalid' //face out of frame
+      state2 = 'non-sitting' //face out of frame
     }
 
   }
@@ -254,8 +254,8 @@ function timer1() {
 
   // get seconds 
   var tot_sec = Math.round(timeDiff);
-  //console.log(seconds + " seconds");
-  //text("time elapsed:"+seconds, 100, 150);
+  console.log(seconds + " seconds");
+  text("time elapsed:"+seconds, 100, 150);
   return tot_sec
 }
 
@@ -264,8 +264,8 @@ let textString;
 
 function color_background() {
   if (state == 'prediction') {
-    //textAlign(CENTER);
-    //text("Time spent at Desk: "+valid_seconds+" secs, Time you hunched for: "+hunch_seconds+" secs", 320, 490);
+    textAlign(CENTER);
+    text("Time spent at Desk: "+valid_seconds+" secs, Time you hunched for: "+hunch_seconds+" secs", 320, 490);
     textString = "Time spent at Desk: "+valid_seconds+" secs, Time you hunched for: "+hunch_seconds+" secs"
     let bbox = font.textBounds(textString, 320, 490, 15);
     fill(255);
